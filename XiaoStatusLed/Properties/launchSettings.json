@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "XiaoStatusLed": {
+      "commandName": "Project",
+      "commandLineArgs": "working"
+    }
+  }
+}
