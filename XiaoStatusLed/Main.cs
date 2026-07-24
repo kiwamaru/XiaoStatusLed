@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 
 namespace XiaoStatusLed
 {
     public static class Program
     {
+        public sealed class HookInput
+        {
+            public string? HookEventName { get; set; }
+            public string? NotificationType { get; set; }
+        }
+
         public static void Main(string[] args)
         {
             if (args.Length == 0)
@@ -79,8 +86,27 @@ namespace XiaoStatusLed
                         break;
 
                     default:
-                        Console.Error.WriteLine(
-                            $"Unknown state: {state}");
+                        string json = Console.In.ReadToEnd();
+                        HookInput? input = JsonSerializer.Deserialize<HookInput>(json,
+                                    new JsonSerializerOptions
+                                    {
+                                        PropertyNameCaseInsensitive = true
+                                    });
+
+                        if (input?.NotificationType == "permission_prompt")
+                        {
+                            xiao.SetPattern(
+                                255, 128, 0,
+                                "SINE",
+                                500,
+                                0,
+                                255);
+                        }
+                        else { 
+
+                            Console.Error.WriteLine(
+                                $"Unknown state: {state}");
+                        }
 
                         return;
                 }
