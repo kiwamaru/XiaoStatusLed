@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
-
+/// <summary>
+/// XIAO RP2040 のCOMポートを検索するためのユーティリティクラス
+/// </summary>
 public static class ComPortFinder
 {
     private const uint DIGCF_PRESENT = 0x00000002;

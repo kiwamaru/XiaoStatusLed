@@ -1,5 +1,5 @@
-// NeoPixelを使ったCOMコマンドでのインジケーター
-
+// XIAO RP2040 の NeoPixelを使ったCOMコマンドでのインジケーター
+// Arduino 
 
 //COMコマンド形式
 //SET 255 0 0 SINE 2000 0 255
@@ -80,7 +80,11 @@ void setLed(uint8_t r, uint8_t g, uint8_t b)
 
     pixel.show();
 }
-
+/**
+ * @param waveform 波形
+ * @param phase 0.0 ～ 1.0 の位相
+ * @return 波形の値 0.0 ～ 1.0
+ */
 float getWaveValue(Waveform waveform, float phase)
 {
     // phase: 0.0 ～ 1.0
@@ -110,7 +114,9 @@ float getWaveValue(Waveform waveform, float phase)
 
     return 0.0f;
 }
-
+/**
+ * @brief LEDの状態を更新する
+ */
 void updateLed()
 {
     const uint32_t now = millis();
@@ -156,7 +162,11 @@ void updateLed()
 // --------------------------------------------------
 // コマンド解析
 // --------------------------------------------------
-
+/**
+ * @brief 波形名をWaveform列挙型に変換する
+ * @param name 波形名
+ * @return Waveform列挙型
+ */
 Waveform parseWaveform(const char* name)
 {
     if (strcmp(name, "SINE") == 0)
@@ -170,7 +180,10 @@ Waveform parseWaveform(const char* name)
 
     return Waveform::Constant;
 }
-
+/**
+ * @brief コマンドを解析してLEDパターンを設定する
+ * @param command コマンド文字列
+ */
 void processCommand(char* command)
 {
     uint16_t r;
@@ -274,7 +287,9 @@ constexpr size_t COMMAND_BUFFER_SIZE = 128;
 
 char commandBuffer[COMMAND_BUFFER_SIZE];
 size_t commandLength = 0;
-
+/**
+ * @brief シリアルからコマンドを受信して処理する
+ */
 void receiveCommand()
 {
     while (Serial.available() > 0)
@@ -317,7 +332,6 @@ void receiveCommand()
 
 void setup()
 {
-   
     // XIAO RP2040のNeoPixel電源
     pinMode(LED_POWER_PIN, OUTPUT);
     digitalWrite(LED_POWER_PIN, HIGH);

@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 namespace XiaoStatusLed
 {
 
+    /// <summary>
+    /// XIAO RP2040 のCOMポートを操作するためのユーティリティクラス
+    /// </summary>
     public sealed class XiaoCom : IDisposable
     {
         // ここを自分のXIAO RP2040のVID/PIDに合わせる
@@ -21,6 +24,10 @@ namespace XiaoStatusLed
 
         public string? PortName => _serialPort?.PortName;
 
+        /// <summary>
+        /// XIAO RP2040のCOMポートに接続する
+        /// </summary>
+        /// <returns>接続に成功した場合は true、失敗した場合は false</returns>
         public bool Connect()
         {
             Disconnect();
@@ -44,7 +51,12 @@ namespace XiaoStatusLed
             return false;
         }
 
-
+        /// <summary>
+        /// 指定されたCOMポートにPINGコマンドを送信して応答を確認する
+        /// </summary>
+        /// <param name="portName">COMポート名</param>
+        /// <param name="port">接続されたSerialPortオブジェクト</param>
+        /// <returns>応答が正しい場合は true、そうでない場合は false</returns>
         private static bool TryPing(string portName,out SerialPort? port)
         {
             port = null;
@@ -94,6 +106,11 @@ namespace XiaoStatusLed
             }
         }
 
+        /// <summary>
+        /// 指定されたSerialPortから応答を読み取る
+        /// </summary>
+        /// <param name="port"></param>
+        /// <returns></returns>
         private static string ReadResponse(SerialPort port)
         {
             var buffer = new System.Collections.Generic.List<byte>();
@@ -128,6 +145,17 @@ namespace XiaoStatusLed
             return System.Text.Encoding.ASCII.GetString(buffer.ToArray()).Trim();
         }
 
+        /// <summary>
+        /// 指定されたパターンでLEDを点灯させる
+        /// </summary>
+        /// <param name="r">赤の輝度 (0-255)</param>
+        /// <param name="g">緑の輝度 (0-255)</param>
+        /// <param name="b">青の輝度 (0-255)</param>
+        /// <param name="waveform">波形の種類</param>
+        /// <param name="periodMs">周期 (ミリ秒)</param>
+        /// <param name="minBrightness">最小輝度 (0-255)</param>
+        /// <param name="maxBrightness">最大輝度 (0-255)</param>
+        /// <exception cref="InvalidOperationException"></exception>
         public void SetPattern(
             byte r,
             byte g,
@@ -153,6 +181,9 @@ namespace XiaoStatusLed
             _serialPort!.WriteLine(command);
         }
 
+        /// <summary>
+        /// LEDを消灯する
+        /// </summary>
         public void Off()
         {
             if (IsConnected)
@@ -161,6 +192,9 @@ namespace XiaoStatusLed
             }
         }
 
+        /// <summary>
+        /// XIAO RP2040のCOMポートから切断する
+        /// </summary>
         public void Disconnect()
         {
             if (_serialPort == null)
