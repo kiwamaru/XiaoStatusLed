@@ -1,5 +1,5 @@
 // XIAO RP2040 の NeoPixelを使ったCOMコマンドでのインジケーター
-// Arduino 
+// このコードは Arduino 用の プロジェクトです
 
 //COMコマンド形式
 //SET 255 0 0 SINE 2000 0 255
